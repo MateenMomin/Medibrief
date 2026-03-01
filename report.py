@@ -4,6 +4,7 @@ from db import Reports, get_session_maker
 from authentication import current_active_user
 import shutil
 import os
+from textextractor import extract_text
 
 router = APIRouter(prefix="/files", tags=["files"])
 
@@ -20,6 +21,8 @@ async def upload_file(
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
+    
+    extracted_text = extract_text(file_path)
 
     new_report = Reports(
         user_id=user.id,
