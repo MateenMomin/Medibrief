@@ -27,6 +27,7 @@ async def upload_file(
     new_report = Reports(
         user_id=user.id,
         original_filepath=file_path,
+        extracted_text=extracted_text
     )
 
     session.add(new_report)
