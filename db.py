@@ -27,6 +27,7 @@ class Reports(Base):
     language=Column(VARCHAR(255))
     created_at=Column(DateTime,default=datetime.utcnow)
     user = relationship("User", back_populates="reports")
+    status = Column(VARCHAR(50), default="processing")
 
 engine=create_async_engine(DATABASE_URL)
 async_session_maker=async_sessionmaker(engine,expire_on_commit=False)

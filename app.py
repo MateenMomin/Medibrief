@@ -10,6 +10,7 @@ from report import router as file_router
 from sqlalchemy import select
 from typing import Optional
 from fastapi.middleware.cors import CORSMiddleware
+from report_router import router as report_router
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
@@ -38,6 +39,7 @@ app.include_router(
     tags=["auth"],
 )
 app.include_router(file_router)
+app.include_router(report_router)
 
 
 @app.post("/reports")
