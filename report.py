@@ -23,11 +23,17 @@ async def upload_file(
         shutil.copyfileobj(file.file, buffer)
     
     extracted_text = extract_text(file_path)
+    if not extracted_text.strip():
+        extracted_text = "No text could be extracted"
+        status="failed"
+    else:
+        status="completed"
 
     new_report = Reports(
         user_id=user.id,
         original_filepath=file_path,
-        extracted_text=extracted_text
+        extracted_text=extracted_text,
+        status=status
     )
 
     session.add(new_report)
@@ -37,6 +43,7 @@ async def upload_file(
     return {
         "message": "File uploaded successfully",
         "report_id": new_report.id
+        
     }
 
 
