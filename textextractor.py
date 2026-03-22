@@ -1,5 +1,14 @@
 import fitz  # PyMuPDF
+from PIL import Image
 from docx import Document
+import pytesseract
+
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
+def extract_text_from_image(file_path):
+    image = Image.open(file_path)
+    text = pytesseract.image_to_string(image)
+    return text
 
 def extract_text_from_pdf(file_path: str) -> str:
     text = ""
@@ -32,6 +41,9 @@ def extract_text(file_path: str) -> str:
 
     elif file_path.endswith(".txt"):
         return extract_text_from_txt(file_path)
+    
+    elif file_path.endswith((".png", ".jpg", ".jpeg")):
+        return extract_text_from_image(file_path)
 
     else:
         raise ValueError("Unsupported file type")
