@@ -1,163 +1,221 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Medibrief AI</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: Arial;
     background: linear-gradient(135deg, #667eea, #764ba2);
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.container {
-    width: 360px;
-    padding: 30px;
-    border-radius: 20px;
-    backdrop-filter: blur(15px);
-    background: rgba(255,255,255,0.1);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
     color: white;
-    animation: fadeIn 1s ease;
 }
 
-input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 10px;
-    border: none;
-    outline: none;
+/* Glass Card */
+.container {
+width: 350px;
+backdrop-filter: blur(20px);
+background: rgba(255,255,255,0.1);
+padding: 25px;
+border-radius: 15px;
+box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+animation: fadeIn 1s ease;
+}
+
+input, button, textarea {
+width: 100%;
+margin: 8px 0;
+padding: 10px;
+border-radius: 8px;
+border: none;
 }
 
 button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    background: #00c6ff;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
+background: #00c6ff;
+color: white;
+cursor: pointer;
+transition: 0.3s;
 }
 
 button:hover {
-    background: #0072ff;
-    transform: scale(1.05);
+background: #0072ff;
 }
 
-.hidden {
-    display: none;
+/* Hidden */
+.hidden { display: none; }
+
+/* Dashboard */
+.dashboard {
+width: 600px;
 }
 
-h2 {
-    text-align: center;
+/* Chat box */
+.chatbox {
+height: 150px;
+overflow-y: auto;
+background: rgba(0,0,0,0.3);
+padding: 10px;
+border-radius: 10px;
 }
 
+/* Animation */
 @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity: 1; transform: translateY(0);}
-}
-</style>
+from {opacity: 0; transform: translateY(20px);}
+to {opacity: 1;}
+} </style>
+
 </head>
 
 <body>
 
+<!-- LOGIN -->
+
 <div class="container" id="loginBox">
     <h2>Login</h2>
-    <input type="text" id="email" placeholder="Email">
-    <input type="password" id="password" placeholder="Password">
+    <input type="text" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Password">
     <button onclick="login()">Login</button>
-    <p onclick="showRegister()" style="text-align:center;cursor:pointer;">Register</p>
+    <p onclick="showSignup()" style="cursor:pointer;">New user? Sign up</p>
 </div>
 
-<div class="container hidden" id="registerBox">
-    <h2>Register</h2>
-    <input type="text" id="regEmail" placeholder="Email">
-    <input type="password" id="regPassword" placeholder="Password">
-    <button onclick="register()">Register</button>
-    <p onclick="showLogin()" style="text-align:center;cursor:pointer;">Back</p>
+<!-- SIGNUP -->
+
+<div class="container hidden" id="signupBox">
+    <h2>Sign Up</h2>
+    <input type="text" id="signupEmail" placeholder="Email">
+    <input type="password" id="signupPassword" placeholder="Password">
+    <button onclick="signup()">Register</button>
+    <p onclick="showLogin()" style="cursor:pointer;">Already have account?</p>
 </div>
 
-<div class="container hidden" id="uploadBox">
-    <h2>Upload Report</h2>
-    <input type="file" id="fileInput">
-    <button onclick="uploadFile()">Upload</button>
-    <p id="result"></p>
+<!-- DASHBOARD -->
+
+<div class="container dashboard hidden" id="dashboard">
+    <h2>Medibrief Dashboard</h2>
+
+```
+<!-- Upload -->
+<input type="file" id="fileInput">
+<button onclick="uploadFile()">Upload File</button>
+
+<!-- Text -->
+<textarea id="textInput" placeholder="Paste medical report..."></textarea>
+<button onclick="sendText()">Summarize Text</button>
+
+<!-- Output -->
+<h3>Summary</h3>
+<div id="summaryBox">Waiting...</div>
+
+<!-- Chatbot -->
+<h3>Chatbot</h3>
+<div class="chatbox" id="chatbox"></div>
+<input type="text" id="chatInput" placeholder="Ask something...">
+<button onclick="sendChat()">Send</button>
+
+<button onclick="logout()">Logout</button>
+```
+
 </div>
 
 <script>
 let token = "";
 
-// UI switch
-function showRegister() {
-    document.getElementById("loginBox").classList.add("hidden");
-    document.getElementById("registerBox").classList.remove("hidden");
+// SWITCH UI
+function showSignup(){
+    loginBox.classList.add("hidden");
+    signupBox.classList.remove("hidden");
 }
 
-function showLogin() {
-    document.getElementById("registerBox").classList.add("hidden");
-    document.getElementById("loginBox").classList.remove("hidden");
+function showLogin(){
+    signupBox.classList.add("hidden");
+    loginBox.classList.remove("hidden");
 }
 
-// Register
-async function register() {
-    await fetch("http://127.0.0.1:8000/auth/register", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({
-            email: document.getElementById("regEmail").value,
-            password: document.getElementById("regPassword").value
-        })
-    });
-
-    alert("Registered! Now login.");
-    showLogin();
-}
-
-// Login
-async function login() {
-    let formData = new URLSearchParams();
-    formData.append("username", document.getElementById("email").value);
-    formData.append("password", document.getElementById("password").value);
-
+// LOGIN
+async function login(){
     let res = await fetch("http://127.0.0.1:8000/auth/jwt/login", {
         method: "POST",
-        body: formData
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: new URLSearchParams({
+            username: loginEmail.value,
+            password: loginPassword.value
+        })
     });
 
     let data = await res.json();
     token = data.access_token;
 
-    document.getElementById("loginBox").classList.add("hidden");
-    document.getElementById("uploadBox").classList.remove("hidden");
+    loginBox.classList.add("hidden");
+    dashboard.classList.remove("hidden");
 }
 
-// Upload
-async function uploadFile() {
-    let file = document.getElementById("fileInput").files[0];
+// SIGNUP
+async function signup(){
+    await fetch("http://127.0.0.1:8000/auth/register", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            email: signupEmail.value,
+            password: signupPassword.value
+        })
+    });
 
+    alert("Registered! Now login");
+    showLogin();
+}
+
+// UPLOAD FILE
+async function uploadFile(){
+    let file = fileInput.files[0];
     let formData = new FormData();
     formData.append("file", file);
 
     let res = await fetch("http://127.0.0.1:8000/files/upload", {
         method: "POST",
-        headers: {
-            "Authorization": "Bearer " + token
-        },
+        headers: {"Authorization": "Bearer " + token},
         body: formData
     });
 
     let data = await res.json();
-    document.getElementById("result").innerText =
-        "Uploaded! Report ID: " + data.report_id;
+    summaryBox.innerText = "Processing...";
+}
+
+// TEXT SUMMARY
+async function sendText(){
+    let res = await fetch("http://127.0.0.1:8000/reports", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({
+            extracted_text: textInput.value,
+            language: "en"
+        })
+    });
+
+    let data = await res.json();
+    summaryBox.innerText = "Processing...";
+}
+
+// CHATBOT (basic)
+function sendChat(){
+    let msg = chatInput.value;
+    chatbox.innerHTML += "<p><b>You:</b> " + msg + "</p>";
+
+    // Dummy reply
+    let reply = "AI: This is a demo response.";
+    chatbox.innerHTML += "<p>" + reply + "</p>";
+}
+
+// LOGOUT
+function logout(){
+    location.reload();
 }
 </script>
 
