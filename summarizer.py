@@ -3,7 +3,7 @@ import httpx
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
 async def ask_llm(prompt: str):
-    async with httpx.AsyncClient(timeout=600) as client:
+    async with httpx.AsyncClient(timeout=800) as client:
         response = await client.post(
             OLLAMA_URL,
             json={"model": "llama3.2", "prompt": prompt, "stream": False}
@@ -12,7 +12,7 @@ async def ask_llm(prompt: str):
 
 
 async def summarize(text: str):
-    text = text[:2000]
+    text = text[3500]
     prompt = f"""
     You are a professional medical assistant.
 
@@ -33,7 +33,7 @@ async def summarize(text: str):
 
 
 async def answer_question(report: str, question: str):
-    report = report[:2000]
+    report = report[:3500]
     prompt = f"""
     You are a medical assistant.
 

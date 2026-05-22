@@ -1065,15 +1065,36 @@ function showResultCard(report) {
   card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 // ─── POLL FOR SUMMARY ───
+const loadingMessages = [
+  "🔍 Reading your report...",
+  "🧠 AI is analyzing findings...",
+  "📋 Identifying diagnosis...",
+  "⚕️ Checking key findings...",
+  "📊 Assessing severity...",
+  "💊 Preparing recommendations...",
+  "✍️ Almost done..."
+];
+
 function pollForSummary(reportId) {
   if (pollTimer) clearInterval(pollTimer);
   let attempts = 0;
+
   pollTimer = setInterval(async () => {
     attempts++;
-    if (attempts > 30) { clearInterval(pollTimer); return; }
+    if (attempts > 60) {
+      clearInterval(pollTimer);
+      toast('Taking longer than expected. Please check back later.', 'info');
+      return;
+    }
+
+    // Cycle through loading messages so user feels progress
+    const msgEl = document.getElementById('resultStatus');
+    const msg = loadingMessages[Math.min(attempts - 1, loadingMessages.length - 1)];
+    msgEl.innerHTML = `<span class="polling-badge"><span class="pulse-dot"></span> ${msg}</span>`;
+
     try {
       const res = await fetch(`${API}/reports/?report_id=${reportId}`, {
-        headers: {'Authorization': 'Bearer '+token}
+        headers: { 'Authorization': 'Bearer ' + token }
       });
       const data = await res.json();
       if (data.status === 'completed' || data.status === 'Completed') {
