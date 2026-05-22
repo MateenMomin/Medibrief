@@ -17,10 +17,13 @@ def extract_text_from_pdf(file_path: str) -> str:
     pdf = fitz.open(file_path)
 
     for page in pdf:
-        text += page.get_text()
+        blocks = page.get_text("blocks")  # get text in blocks/paragraphs
+        for block in blocks:
+            if block[6] == 0:  # text block (not image)
+                text += block[4].strip() + "\n\n"
 
     pdf.close()
-    return text
+    return text.strip()
 
 
 def extract_text_from_docx(file_path: str) -> str:

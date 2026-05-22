@@ -10,6 +10,7 @@ class ReportCreate(BaseModel):
 class ReportResponse(BaseModel):
     id: int
     extracted_text: str
+    summarized_text: Optional[str] = None
     language: Optional[str]
     status: str
     created_at: datetime

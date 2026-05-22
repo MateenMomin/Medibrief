@@ -8,6 +8,7 @@ import os
 from report import router as file_router
 from fastapi.middleware.cors import CORSMiddleware
 from report_router import router as report_router
+from schema import UserRead, UserCreate
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):

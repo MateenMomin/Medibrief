@@ -4,6 +4,7 @@ from db import Reports, get_session_maker
 from authentication import current_active_user
 import shutil
 import os
+import asyncio
 from textextractor import extract_text
 
 router = APIRouter(prefix="/files", tags=["files"])
@@ -19,15 +20,19 @@ async def upload_file(
 ):
     file_path = f"{UPLOAD_DIR}/{file.filename}"
 
+    # Save file to disk
+    contents = await file.read()
     with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    
-    extracted_text = extract_text(file_path)
+        buffer.write(contents)
+
+    # Run blocking text extraction in thread pool so server doesn't freeze
+    extracted_text = await asyncio.to_thread(extract_text, file_path)
+
     if not extracted_text.strip():
         extracted_text = "No text could be extracted"
-        status="failed"
+        status = "failed"
     else:
-        status="completed"
+        status = "completed"
 
     new_report = Reports(
         user_id=user.id,
@@ -43,8 +48,4 @@ async def upload_file(
     return {
         "message": "File uploaded successfully",
         "report_id": new_report.id
-        
     }
-
-
-
