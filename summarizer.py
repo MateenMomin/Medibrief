@@ -1,28 +1,18 @@
-import requests
+import httpx
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
-def ask_llm(prompt: str):
-
-    payload = {
-        "model": "llama3",
-        "prompt": prompt,
-        "stream": False
-    }
-
-    response = requests.post(
-        OLLAMA_URL,
-        json=payload,
-        timeout=120
-    )
-
-    return response.json()["response"]
+async def ask_llm(prompt: str):
+    async with httpx.AsyncClient(timeout=120) as client:
+        response = await client.post(
+            OLLAMA_URL,
+            json={"model": "llama3", "prompt": prompt, "stream": False}
+        )
+        return response.json()["response"]
 
 
 async def summarize(text: str):
-
     text = text[:4000]
-
     prompt = f"""
     You are a professional medical assistant.
 
@@ -39,14 +29,11 @@ async def summarize(text: str):
     Report:
     {text}
     """
-
-    return ask_llm(prompt)
+    return await ask_llm(prompt)
 
 
 async def answer_question(report: str, question: str):
-
     report = report[:4000]
-
     prompt = f"""
     You are a medical assistant.
 
@@ -60,12 +47,10 @@ async def answer_question(report: str, question: str):
     User Question:
     {question}
     """
-
-    return ask_llm(prompt)
+    return await ask_llm(prompt)
 
 
 async def translate_report(text: str, language: str):
-
     prompt = f"""
     Translate the following medical text to {language}.
 
@@ -75,5 +60,4 @@ async def translate_report(text: str, language: str):
     Text:
     {text}
     """
-
-    return ask_llm(prompt)
+    return await ask_llm(prompt)
