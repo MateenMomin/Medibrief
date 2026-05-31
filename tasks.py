@@ -1,3 +1,4 @@
+import asyncio
 from db import async_session_maker
 from sqlalchemy import select
 from db import Reports
@@ -6,6 +7,7 @@ from summarizer import summarize
 
 async def process_summary(report_id: int):
     try:
+        await asyncio.sleep(1)
         async with async_session_maker() as session:
             result = await session.execute(
                 select(Reports).where(Reports.id == report_id)

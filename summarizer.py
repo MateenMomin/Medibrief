@@ -12,7 +12,7 @@ async def ask_llm(prompt: str):
 
 
 async def summarize(text: str):
-    text = text[3500]
+    text = text[:3500]
     prompt = f"""
     You are a professional medical assistant.
 

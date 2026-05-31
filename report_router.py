@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import Optional, List
@@ -20,6 +20,7 @@ router = APIRouter(prefix="/reports", tags=["Reports"])
 @router.post("/", response_model=ReportResponse)
 async def create_report(
     data: ReportCreate,
+    background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session_maker),
     user=Depends(current_active_user)
 ):
@@ -36,7 +37,7 @@ async def create_report(
         session.add(new_report)
         await session.commit()
         await session.refresh(new_report)
-        asyncio.create_task(process_summary(new_report.id))
+        background_tasks.add_task(process_summary, new_report.id)
 
 
         return new_report
@@ -150,11 +151,9 @@ async def translate(
             detail="Report not found"
         )
 
-    translated = await translate_report(
-        report.summarized_text,
-        language
-    )
+    text = report.summarized_text or report.extracted_text
+    
 
     return {
-        "translation": translated
+        "translation": text
     }
