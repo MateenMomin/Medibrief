@@ -152,8 +152,12 @@ async def translate(
         )
 
     text = report.summarized_text or report.extracted_text
+    translated_text = await translate_report(
+        text,
+        language
+    )
     
 
     return {
-        "translation": text
+        "translation": translated_text
     }
