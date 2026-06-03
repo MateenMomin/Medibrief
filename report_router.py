@@ -10,8 +10,10 @@ from report_schema import ReportCreate, ReportResponse
 from summarizer import (
     summarize,
     answer_question,
-    translate_report
+    translate_report,
+    extract_specialty
 )
+
 
 router = APIRouter(prefix="/reports", tags=["Reports"])
 
@@ -161,3 +163,19 @@ async def translate(
     return {
         "translation": translated_text
     }
+
+@router.get("/specialty")
+async def get_specialty(
+    report_id: int,
+    session: AsyncSession = Depends(get_session_maker),
+    user=Depends(current_active_user)
+):
+    result = await session.execute(
+        select(Reports).where(Reports.id == report_id, Reports.user_id == user.id)
+    )
+    report = result.scalar_one_or_none()
+    if not report or not report.summarized_text:
+        return {"specialty": "general physician"}
+    
+    specialty = await extract_specialty(report.summarized_text)
+    return {"specialty": specialty}

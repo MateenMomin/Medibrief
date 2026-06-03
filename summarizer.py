@@ -61,3 +61,15 @@ async def translate_report(text: str, language: str):
     {text}
     """
     return await ask_llm(prompt)
+
+async def extract_specialty(summary: str) -> str:
+    prompt = f"""Based on this medical summary, what type of medical specialist should the patient see?
+Reply with ONLY the specialist type (e.g. "cardiologist", "neurologist", "orthopedist", "pulmonologist", "gastroenterologist", "general physician").
+One word or two words maximum. No explanation.
+
+Summary:
+{summary[:1000]}
+
+Specialist:"""
+    result = await ask_llm(prompt)
+    return result.strip().split('\n')[0].strip()
