@@ -32,21 +32,25 @@ async def summarize(text: str):
     return await ask_llm(prompt)
 
 
-async def answer_question(report: str, question: str):
+async def answer_question(report: str, question: str) -> str:
     report = report[:3500]
-    prompt = f"""
-    You are a medical assistant.
+    prompt = f"""You are a helpful medical AI assistant.
 
-    Use ONLY the provided report.
+Answer the user's question based on the medical report below.
 
-    Do NOT make assumptions.
+STRICT RULES:
+- Do NOT mention any doctor names, patient names, or hospital names
+- Do NOT say "according to Dr. X" or "Dr. X recommends"
+- Give the answer directly and clearly
+- If it is a health/diet/lifestyle question, give practical helpful advice
+- Keep the answer concise and easy to understand
 
-    Report:
-    {report}
+Medical Report:
+{report}
 
-    User Question:
-    {question}
-    """
+Question: {question}
+
+Answer:"""
     return await ask_llm(prompt)
 
 
