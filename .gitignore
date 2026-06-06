@@ -1,0 +1,51 @@
+# Environment Variables
+.env
+
+# Python Virtual Environment
+medibriefvenv/
+venv/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Uploaded Reports
+uploads/
+
+# Generated Files
+*.pdf
+*.docx
+*.xlsx
+
+# Database Files
+*.db
+*.sqlite3
+
+# Logs
+*.log
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Build Files
+build/
+dist/
+*.egg-info/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment Configs
+.env.local
+.env.production
