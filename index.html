@@ -59,8 +59,132 @@
   --topbar-h: 68px;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+/* ═══════════════════════════════════════
+   DARK MODE
+═══════════════════════════════════════ */
+body.dark {
+  --white: #1e2433;
+  --bg: #151a27;
+  --bg2: #1a2035;
+  --surface: #1e2433;
+  --surface2: #242b3d;
+  --border: #2d3748;
+  --border2: #3d4f6e;
+
+  --blue-light: rgba(26,86,219,0.15);
+  --blue-mid: rgba(26,86,219,0.25);
+  --green-light: rgba(14,159,110,0.15);
+  --amber-light: rgba(255,140,0,0.15);
+  --red-light: rgba(224,36,36,0.15);
+  --purple-light: rgba(124,58,237,0.15);
+
+  --text: #e2e8f0;
+  --text2: #cbd5e1;
+  --text3: #94a3b8;
+  --text4: #64748b;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow: 0 4px 6px rgba(0,0,0,0.3);
+  --shadow-md: 0 10px 25px rgba(0,0,0,0.4);
+  --shadow-lg: 0 20px 40px rgba(0,0,0,0.5);
+}
+body.dark .auth-card { background: rgba(30,36,51,0.95); border-color: rgba(255,255,255,0.08); }
+body.dark #auth-page { background: linear-gradient(135deg,#0f172a,#1e2433,#0f172a); }
+body.dark .topbar { background: var(--surface); }
+body.dark .sidebar { background: var(--surface); }
+body.dark .card, body.dark .result-card, body.dark .upload-card,
+body.dark .insights-card, body.dark .qa-right-card, body.dark .text-box-card { background: var(--surface); }
+body.dark .report-table th { background: var(--bg); }
+body.dark .report-table tr:hover td { background: var(--bg2); }
+body.dark .field-input, body.dark .med-textarea, body.dark .chat-input,
+body.dark .report-select, body.dark .lang-select { background: var(--bg); color: var(--text); border-color: var(--border2); }
+body.dark .auth-tabs { background: var(--bg); }
+body.dark .auth-tab.active { background: var(--surface2); }
+body.dark .topbar-search { background: var(--bg); border-color: var(--border); }
+body.dark .topbar-search input { color: var(--text); }
+body.dark .icon-btn { background: var(--surface); border-color: var(--border); }
+body.dark .btn-logout { background: var(--bg); border-color: var(--border); }
+body.dark .sq-btn { background: var(--bg); border-color: var(--border); color: var(--text3); }
+body.dark .action-btn { background: var(--bg); border-color: var(--border); color: var(--text3); }
+body.dark .filter-btn { background: var(--bg); border-color: var(--border); color: var(--text3); }
+body.dark .filter-btn.active, body.dark .filter-btn:hover { background: var(--blue-light); border-color: var(--blue); color: var(--blue); }
+body.dark .extracted-box { background: var(--bg); border-color: var(--border); }
+body.dark .msg-bubble-ai { background: var(--bg2); border-color: var(--border); }
+body.dark .sb-user { background: var(--bg); }
+body.dark .upload-zone { border-color: var(--border2); }
+body.dark .upload-zone:hover, body.dark .upload-zone.drag-over { background: var(--blue-light); }
+body.dark .history-table-wrap { background: var(--surface); }
+body.dark .sb-rpt:hover { background: var(--bg2); }
+body.dark .disclaimer-bar { background: #0f172a !important; border-color: #1e2433 !important; }
+
+/* ═══════════════════════════════════════
+   SETTINGS MODAL
+═══════════════════════════════════════ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 9990;
+  background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.settings-modal {
+  background: var(--surface); border-radius: var(--radius-xl);
+  width: 100%; max-width: 520px; max-height: 85vh;
+  overflow-y: auto; box-shadow: var(--shadow-lg);
+  animation: cardIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+  border: 1px solid var(--border);
+}
+.settings-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 24px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; background: var(--surface); z-index: 1;
+}
+.settings-title { font-size: 18px; font-weight: 800; }
+.modal-close {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1.5px solid var(--border); background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text3); font-size: 18px; line-height: 1;
+  transition: all 0.15s;
+}
+.modal-close:hover { border-color: var(--red); color: var(--red); background: var(--red-light); }
+.settings-body { padding: 24px; }
+.settings-section { margin-bottom: 28px; }
+.settings-section-title {
+  font-size: 11px; font-weight: 700; color: var(--text4);
+  text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.settings-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-row-left .s-label { font-size: 14px; font-weight: 600; color: var(--text); }
+.settings-row-left .s-sub { font-size: 12px; color: var(--text4); margin-top: 2px; }
+
+/* TOGGLE SWITCH */
+.toggle {
+  width: 44px; height: 24px; border-radius: 99px;
+  background: var(--border2); position: relative; cursor: pointer;
+  transition: background 0.25s; flex-shrink: 0; border: none;
+}
+.toggle.on { background: var(--blue); }
+.toggle::after {
+  content: ''; position: absolute; width: 18px; height: 18px;
+  border-radius: 50%; background: white; top: 3px; left: 3px;
+  transition: transform 0.25s; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.toggle.on::after { transform: translateX(20px); }
+
+.theme-options { display: flex; gap: 10px; }
+.theme-btn {
+  flex: 1; padding: 10px; border-radius: var(--radius-sm);
+  border: 2px solid var(--border); background: var(--surface);
+  font-size: 13px; font-weight: 600; color: var(--text3);
+  transition: all 0.15s; text-align: center;
+}
+.theme-btn.active { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+.theme-btn:hover { border-color: var(--blue); color: var(--blue); }
 body {
   font-family: var(--font);
   background: var(--bg);
@@ -839,6 +963,10 @@ a { text-decoration: none; color: inherit; }
       <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.5"/><path d="M2.5 10h15M10 2.5c-2 2-3 4.5-3 7.5s1 5.5 3 7.5M10 2.5c2 2 3 4.5 3 7.5s-1 5.5-3 7.5" stroke="currentColor" stroke-width="1.2"/></svg>
       Translate
     </button>
+    <button class="nav-item" id="nav-settings" onclick="openSettings(); event.stopPropagation()">
+      <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 3v1M10 16v1M3 10h1M16 10h1M5.05 5.05l.7.7M14.25 14.25l.7.7M14.25 5.75l-.7.7M5.75 14.25l-.7.7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      Settings
+    </button>
 
     <div class="sb-section">Recent Reports</div>
     <div class="sb-reports" id="sidebarReports">
@@ -874,8 +1002,11 @@ a { text-decoration: none; color: inherit; }
           <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="#9ca3af" stroke-width="1.4"/><path d="M10 10l3 3" stroke="#9ca3af" stroke-width="1.4" stroke-linecap="round"/></svg>
           <input type="text" placeholder="Search reports...">
         </div>
-        <button class="icon-btn">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5a5 5 0 015 5v2l1 2H2l1-2v-2a5 5 0 015-5zM6.5 13.5a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <button class="icon-btn" onclick="toggleDark()" id="darkBtn" title="Toggle dark mode">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 10A6 6 0 016 2.5a6 6 0 100 11 6 6 0 007.5-3.5z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+        <button class="icon-btn" onclick="openSettings()" title="Settings">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.4"/><path d="M8 2v1M8 13v1M2 8h1M13 8h1M3.8 3.8l.7.7M11.5 11.5l.7.7M11.5 4.5l-.7.7M4.5 11.5l-.7.7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         </button>
         <div class="topbar-avatar" id="topbarAvatar">D</div>
       </div>
@@ -1139,9 +1270,9 @@ a { text-decoration: none; color: inherit; }
           <div class="view-sub">All your analyzed medical reports</div>
         </div>
         <div class="history-filters">
-          <button class="filter-btn active">All</button>
-          <button class="filter-btn">Analyzed</button>
-          <button class="filter-btn">Pending</button>
+          <button class="filter-btn active" onclick="filterHistory('all', this)">All</button>
+          <button class="filter-btn" onclick="filterHistory('completed', this)">Analyzed</button>
+          <button class="filter-btn" onclick="filterHistory('processing', this)">Pending</button>
         </div>
         <div class="history-table-wrap">
           <table class="report-table" style="width:100%">
@@ -1256,6 +1387,93 @@ a { text-decoration: none; color: inherit; }
     </div><!-- main-content -->
   </div><!-- main-wrap -->
 </div><!-- dashboard-page -->
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal" onclick="if(event.target===this) closeSettings()">
+  <div class="settings-modal">
+    <div class="settings-head">
+      <div class="settings-title">⚙️ Settings</div>
+      <button class="modal-close" onclick="closeSettings()">×</button>
+    </div>
+    <div class="settings-body">
+
+      <div class="settings-section">
+        <div class="settings-section-title">Appearance</div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="s-label">Theme</div>
+            <div class="s-sub">Choose your preferred color scheme</div>
+          </div>
+          <div class="theme-options">
+            <button class="theme-btn active" id="themeLight" onclick="setTheme('light')">☀️ Light</button>
+            <button class="theme-btn" id="themeDark" onclick="setTheme('dark')">🌙 Dark</button>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="s-label">Dark Mode</div>
+            <div class="s-sub">Toggle between light and dark</div>
+          </div>
+          <button class="toggle" id="darkToggle" onclick="toggleDark()"></button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">AI Analysis</div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="s-label">Auto-detect Specialist</div>
+            <div class="s-sub">Automatically detect doctor type from report</div>
+          </div>
+          <button class="toggle on" id="autoSpecToggle" onclick="this.classList.toggle('on')"></button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="s-label">Show Nearby Doctors</div>
+            <div class="s-sub">Show find doctors button after analysis</div>
+          </div>
+          <button class="toggle on" id="nearbyToggle" onclick="this.classList.toggle('on')"></button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">Account</div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="s-label">Logged in as</div>
+            <div class="s-sub" id="settingsEmail">—</div>
+          </div>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="s-label" style="color:var(--red)">Sign Out</div>
+            <div class="s-sub">Log out of your account</div>
+          </div>
+          <button class="action-btn action-btn-danger" onclick="closeSettings();logout()" style="border-color:var(--red);color:var(--red);">Sign Out</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title">About</div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="s-label">MediBrief</div>
+            <div class="s-sub">AI Medical Report Assistant — Final Year Project</div>
+          </div>
+          <span style="font-size:12px;color:var(--text4);font-weight:600;">v1.0</span>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="s-label">AI Model</div>
+            <div class="s-sub">Powered by Flan T5</div>
+          </div>
+          <span style="font-size:11px;background:var(--green-light);color:var(--green-dark);padding:3px 10px;border-radius:99px;font-weight:600;">Online</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- LOADER -->
 <div class="loader-overlay" id="loaderOverlay">
@@ -1380,8 +1598,10 @@ function showDash() {
 function showView(name) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('view-' + name).classList.add('active');
-  document.getElementById('nav-' + name).classList.add('active');
+  const viewEl = document.getElementById('view-' + name);
+  const navEl = document.getElementById('nav-' + name);
+  if (viewEl) viewEl.classList.add('active');
+  if (navEl) navEl.classList.add('active');
   if (name === 'history') buildHistory();
   if (name === 'qa' || name === 'translate') fillSelects();
   if (name === 'translate') fillOriginalBox();
@@ -1583,10 +1803,33 @@ async function quickView(id) {
 }
 
 // ── HISTORY ──
+let currentFilter = 'all';
+
+function filterHistory(filter, btn) {
+  currentFilter = filter;
+  // Only remove active from history filter buttons, not all filter-btn on page
+  document.querySelectorAll('.history-filters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildHistory();
+}
+
 function buildHistory() {
   const tbody = document.getElementById('historyRows');
-  if (!reports.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text4)">No reports yet</td></tr>'; return; }
-  tbody.innerHTML = reports.slice().reverse().map((r,i) => {
+  let filtered = reports.slice().reverse();
+
+  if (currentFilter === 'completed') {
+    filtered = filtered.filter(r => (r.status||'').toLowerCase() === 'completed');
+  } else if (currentFilter === 'processing') {
+    filtered = filtered.filter(r => (r.status||'').toLowerCase() === 'processing');
+  }
+
+  if (!filtered.length) {
+    const msg = currentFilter === 'all' ? 'No reports yet' : `No ${currentFilter === 'completed' ? 'analyzed' : 'pending'} reports`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text4)">${msg}</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map((r, i) => {
     const s = (r.status||'').toLowerCase();
     const pill = s==='completed'?'sp-analyzed':s==='processing'?'sp-processing':'sp-failed';
     const label = s==='completed'?'Analyzed':s==='processing'?'Processing':'Failed';
@@ -1598,6 +1841,52 @@ function buildHistory() {
       <td><button class="btn-view" onclick="event.stopPropagation();quickView(${r.id})">View</button></td>
     </tr>`;
   }).join('');
+}
+
+// ── DARK MODE ──
+function toggleDark() {
+  const isDark = document.body.classList.toggle('dark');
+  localStorage.setItem('mb_theme', isDark ? 'dark' : 'light');
+  syncThemeUI(isDark);
+}
+
+function setTheme(theme) {
+  const isDark = theme === 'dark';
+  document.body.classList.toggle('dark', isDark);
+  localStorage.setItem('mb_theme', theme);
+  syncThemeUI(isDark);
+}
+
+function syncThemeUI(isDark) {
+  const darkToggle = document.getElementById('darkToggle');
+  const themeLight = document.getElementById('themeLight');
+  const themeDark = document.getElementById('themeDark');
+  const darkBtn = document.getElementById('darkBtn');
+  if (darkToggle) darkToggle.classList.toggle('on', isDark);
+  if (themeLight) themeLight.classList.toggle('active', !isDark);
+  if (themeDark) themeDark.classList.toggle('active', isDark);
+  if (darkBtn) darkBtn.innerHTML = isDark
+    ? `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="4" stroke="currentColor" stroke-width="1.4"/><path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.2 3.2l1 1M11.8 11.8l1 1M11.8 4.2l-1 1M4.2 11.8l-1 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>`
+    : `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 10A6 6 0 016 2.5a6 6 0 100 11 6 6 0 007.5-3.5z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>`;
+}
+
+// Load saved theme on startup
+(function() {
+  const saved = localStorage.getItem('mb_theme');
+  if (saved === 'dark') { document.body.classList.add('dark'); syncThemeUI(true); }
+})();
+
+// ── SETTINGS ──
+function openSettings() {
+  document.getElementById('settingsModal').classList.add('open');
+  document.getElementById('settingsEmail').textContent = currentUser || '—';
+  const isDark = document.body.classList.contains('dark');
+  syncThemeUI(isDark);
+  // Don't change nav active state — settings is a modal, not a view
+  document.getElementById('nav-settings').classList.remove('active');
+}
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('open');
 }
 
 // ── Q&A ──
