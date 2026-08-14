@@ -10,7 +10,7 @@ from fastapi_users.db import SQLAlchemyUserDatabase,SQLAlchemyBaseUserTable
 class Base(DeclarativeBase):
     pass
 
-DATABASE_URL="mysql+aiomysql://root:mateen7840@127.0.0.1:3306/medibrief"
+DATABASE_URL="mysql+aiomysql://username:password@127.0.0.1:3306/medibrief"
 
 class User(SQLAlchemyBaseUserTable[int],Base):
     __tablename__="users"
